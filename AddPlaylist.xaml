@@ -1,0 +1,17 @@
+﻿<Window x:Class="MusicPlayer.AddPlaylist"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MusicPlayer"
+        mc:Ignorable="d"
+        Title="AddPlaylist" Height="200" Width="400">
+    <Grid Background="#6a6a6b">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,152" >
+            <TextBlock Text="New Playlist" FontSize="24" FontWeight="Bold" Foreground="White" Height="76"/>
+        </StackPanel>
+        <TextBlock  FontSize="15" FontWeight="Bold" Foreground="#373840" Margin="27,54,230,0" TextWrapping="Wrap" Text="Playlist Name: " VerticalAlignment="Top" Height="22"/>
+        <TextBox Name="NewPlaylistName" HorizontalAlignment="Left" Margin="158,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="194" Height="20"/>
+        <Button Content="Create" HorizontalAlignment="Left" Margin="104,110,0,0" VerticalAlignment="Top" Height="33" Width="165" Background="#373840" FontSize="15" FontWeight="Bold" Foreground="white" Click="CreatePlaylist_Click" />
+    </Grid>
+</Window>

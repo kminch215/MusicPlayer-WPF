@@ -1,0 +1,87 @@
+﻿<Window x:Class="MusicPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MusicPlayer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="480" Width="800">
+    <Grid Background="#373840">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="329,0,0,0" >
+            <TextBlock Text="Music Player" FontSize="24" FontWeight="Bold" Foreground="White"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!-- Playlist List column -->
+                <ColumnDefinition Width="*"/>
+                <!-- Song List column -->
+            </Grid.ColumnDefinitions>
+            <!-- Playlist List -->
+            <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="25,21,0,0" TextWrapping="Wrap" Text="My Playlists:" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Foreground="White"/>
+            <ListBox Name="PlaylistList" Grid.Column="0" HorizontalAlignment="Center" Margin="25,56,0,0" VerticalAlignment="Top" Background="#373840" BorderThickness="0" FontWeight="Medium" Foreground="White" d:ItemsSource="{d:SampleData ItemCount=5}" Height="212" Width="105" MinHeight="212" MinWidth="105" SelectionChanged="PlaylistSelected_Click" >
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add Playlist" Click="MenuItem_Click" />
+                        <!-- <MenuItem Header="Delete Playlist" Click="DeletePlaylist_Click"/> -->
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+            <Button Grid.Column="0" Content="Select Song" Height="20" Margin="32,290,7,0" VerticalAlignment="Top" Background="LightGray" Click="AddSongButton_Click"/>
+
+            <!-- Song List -->
+            <TextBlock Grid.Column="1" HorizontalAlignment="Left" Height="25"  TextWrapping="Wrap" Text="Songs:" VerticalAlignment="Top" Width="100"  FontSize="18" FontWeight="Bold" Foreground="White" Margin="30,21,0,0"/>
+            <ListBox Name="SongList" Grid.Column="1" Background="LightGray" Height="254"  Width="550" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="30,56,90,97" />
+
+           
+        </Grid>
+
+        <!-- Playback Controls -->
+        <StackPanel Grid.Row="1" x:Name="MusicControls" Background="#6a6a6b" Orientation="Horizontal" Margin="0,342,0,0" VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="Hidden" Width="760" Height="65">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <!-- Auto-sized row -->
+                    <RowDefinition Height="25"/>
+                    <!-- Star-sized row, takes up remaining space -->
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <!-- Auto-sized column -->
+                    <ColumnDefinition Width="370"/>
+                    <!-- Star-sized column, takes up remaining space -->
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="SongInformationDisplay" Grid.Row="0" Grid.Column="1" TextAlignment="Center">This is where the song title will be</TextBlock>
+
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="Previous" Width="20" Height="20" Margin="0,0,5,0" Background="Transparent" Click="Previous_Click">
+                        <Image Source="/images/next-or-back.png" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="-1" CenterX="8.2"/>
+                            </Image.RenderTransform>
+                        </Image>
+                    </Button>
+                    <Button x:Name="Play" Width="20" Height="20" Margin="0,0,5,0" Background="Transparent" Click="Play_Click">
+                        <Image x:Name="PlayPauseButton" Source="/images/pause.png" Stretch="Fill"/>
+                    </Button>
+                    <Button x:Name="Next" Width="20" Height="20" Background="Transparent" Click="Next_Click">
+                        <Image Source="/images/next-or-back.png" Stretch="Fill"/>
+                    </Button>
+                </StackPanel>
+
+                <Slider Name="TimeBar" Grid.Row="2" Grid.Column="1" Width="325" Height="20" />
+            </Grid>
+        </StackPanel>
+
+    </Grid>
+</Window>
