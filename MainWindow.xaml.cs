@@ -40,6 +40,7 @@ namespace MusicPlayer
             songTimer = new System.Timers.Timer(2000);
             songTimer.Elapsed += UpdateScrollBarPosition;
             SongList.SelectionChanged += SongSelection_Click;
+            PreviewKeyDown += MainWindow_PreviewKeyDown;
             songQueue = new Queue<Song>();
             songReplayStack = new Stack<Song>();
             mediaPlayer = new MediaPlayer();
@@ -242,6 +243,23 @@ namespace MusicPlayer
             catch(Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // Check if the pressed key is the desired key
+            if (e.Key == Key.Play || e.Key == Key.MediaPlayPause)
+            {
+                Play_Click(null, null);                
+            }
+            else if (e.Key == Key.MediaNextTrack)
+            {
+                Next_Click(null, null);
+            }
+            else if(e.Key == Key.MediaPreviousTrack)
+            {
+                Previous_Click(null, null);
             }
         }
 
