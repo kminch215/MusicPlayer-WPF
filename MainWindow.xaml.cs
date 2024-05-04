@@ -1,6 +1,7 @@
 ﻿using MusicPlayer.music;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -79,6 +80,13 @@ namespace MusicPlayer
             addSong.ShowDialog();
         }
 
+        private void DeleteSong_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSongLable.Visibility = Visibility.Visible;
+            SongList.SelectionChanged -= SongSelection_Click;
+            SongList.SelectionChanged += RemoveSongSelection_Click;
+        }
+
         private void AddSongToWindow(string songName, string artistName, string songFilePath)
         {
             Song newSong = new Song(songName, artistName, songFilePath);
@@ -141,7 +149,41 @@ namespace MusicPlayer
             }
         }
 
-        public void ClearSongList()
+        private void RemoveSongSelection_Click(object sender, RoutedEventArgs e)
+        {
+            int index = SongList.SelectedIndex;
+            String songName = SongList.SelectedValue.ToString();
+            Console.WriteLine("index: " + index + " songName: " + songName);
+
+            if (PlaylistList.SelectedIndex == -1 || PlaylistList.SelectedIndex == 0)
+            {
+                playlists[0].SongPlaylist.RemoveAt(index);
+                SongList.SelectionChanged -= RemoveSongSelection_Click;
+                SongList.SelectionChanged += SongSelection_Click;
+                DeleteSongLable.Visibility = Visibility.Hidden;
+                sortAndDisplaySongList(0);
+            }
+            else
+            {
+                for(int i = 0; i < playlists[0].SongPlaylist.Count; i++)
+                {
+                    if(songName == playlists[0].SongPlaylist[i].ToString())
+                    {
+                        playlists[0].SongPlaylist.RemoveAt(i);
+                        break;
+                    }
+                }
+                playlists[PlaylistList.SelectedIndex].SongPlaylist.RemoveAt(index);
+                SongList.SelectionChanged -= RemoveSongSelection_Click;
+                SongList.SelectionChanged += SongSelection_Click;
+                DeleteSongLable.Visibility = Visibility.Hidden;
+                sortAndDisplaySongList(PlaylistList.SelectedIndex);
+                sortAndDisplaySongList(0);
+                DisplayPlaylist(PlaylistList.SelectedIndex);
+            }
+        }
+
+            public void ClearSongList()
         {
             SongList.SelectionChanged -= SongSelection_Click;
             SongList.Items.Clear();
@@ -212,11 +254,46 @@ namespace MusicPlayer
                 string verbatimString = filePath;
                 Console.WriteLine(verbatimString);
                 mediaPlayer.Open(new Uri(verbatimString));
+                ExtractAlbumArt(verbatimString);
                 PlayPauseButton.Source = new BitmapImage(new Uri("/images/pause.png", UriKind.RelativeOrAbsolute));
                 Console.WriteLine("test");
                 mediaPlayer.Play();
                 songTimer.Enabled = true;
             });
+        }
+
+        private void ExtractAlbumArt(string filePath)
+        {
+            try
+            {
+                using (var file = TagLib.File.Create(filePath))
+                {
+                    var pictures = file.Tag.Pictures;
+                    if (pictures.Length >= 1)
+                    {
+                        var picture = pictures[0];
+                        using (MemoryStream ms = new MemoryStream(picture.Data.Data))
+                        {
+                            BitmapImage image = new BitmapImage();
+                            image.BeginInit();
+                            image.CacheOption = BitmapCacheOption.OnLoad;
+                            image.StreamSource = ms;
+                            image.EndInit();
+
+                            SongsImage.Source = image;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("No album art found");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
         }
 
         // This method updates the position of the scroll bar based on the elapsed time of the song
@@ -236,7 +313,6 @@ namespace MusicPlayer
                     double percentagePlayed = (currentPosition / totalDuration) * 10;
 
                     // Update the position of the scroll bar
-                    // Assuming 'scrollBar' is the name of your ScrollBar control
                     TimeBar.Value = percentagePlayed;
                 });
             }
@@ -337,15 +413,11 @@ namespace MusicPlayer
                 {
                     PlayPauseButton.Source = new BitmapImage(new Uri("/images/pause.png", UriKind.RelativeOrAbsolute));
                     mediaPlayer.Play();
-                    songTimer.Enabled = false;
                 }
                 else
                 {
                     PlayPauseButton.Source = new BitmapImage(new Uri("/images/play.png", UriKind.RelativeOrAbsolute));
                     mediaPlayer.Pause();
-                    songTimer.Enabled = true;
-
-
                 }
             }
             catch (Exception ex)

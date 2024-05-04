@@ -34,13 +34,16 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
-            <Button Grid.Column="0" Content="Select Song" Height="20" Margin="32,290,7,0" VerticalAlignment="Top" Background="LightGray" Click="AddSongButton_Click"/>
+            <Button Grid.Column="0" Content="Select Song" Height="20" Margin="29,273,10,0" VerticalAlignment="Top" Background="LightGray" Click="AddSongButton_Click"/>
+            <Button Grid.Column="0" Content="Delete Song" Height="20" Margin="29,298,10,0" VerticalAlignment="Top" Background="LightGray" Click="DeleteSong_Click"/>
 
             <!-- Song List -->
             <TextBlock Grid.Column="1" HorizontalAlignment="Left" Height="25"  TextWrapping="Wrap" Text="Songs:" VerticalAlignment="Top" Width="100"  FontSize="18" FontWeight="Bold" Foreground="White" Margin="30,21,0,0"/>
             <ListBox Name="SongList" Grid.Column="1" Background="LightGray" Height="254"  Width="550" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="30,56,90,97" />
+            <Label Name="DeleteSongLable" Grid.Column="1" Content="Select the song you want to delete" HorizontalAlignment="Left" Height="24" Margin="315,16,0,0" VerticalAlignment="Top" Width="194" Foreground="Red" Visibility="Hidden"/>
 
-           
+
+
         </Grid>
 
         <!-- Playback Controls -->
@@ -61,6 +64,7 @@
                     <!-- Star-sized column, takes up remaining space -->
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
+                <Image x:Name="SongsImage" Grid.Column="0" Margin="130,8,20,9"  Height="48" Width="51" Grid.RowSpan="3"/>
                 <TextBlock Name="SongInformationDisplay" Grid.Row="0" Grid.Column="1" TextAlignment="Center">This is where the song title will be</TextBlock>
 
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
