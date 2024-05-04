@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicPlayer"
         mc:Ignorable="d"
-        Title="AddPlaylist" Height="200" Width="400">
+        Title="AddPlaylist" Height="230" Width="400">
     <Grid Background="#6a6a6b">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,152" >
             <TextBlock Text="New Playlist" FontSize="24" FontWeight="Bold" Foreground="White" Height="76"/>

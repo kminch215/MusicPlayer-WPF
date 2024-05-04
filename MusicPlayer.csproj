@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Resource Include="images\volume.png" />
     <Content Include="music\Apocalyptic Echoes - Jimena Contreras.mp3" />
     <Content Include="music\Cosmic Nightmares - Jimena Contreras.mp3" />
     <Content Include="music\Moonlight in Mexico - Jimena Contreras.mp3" />

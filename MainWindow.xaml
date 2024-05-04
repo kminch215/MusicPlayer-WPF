@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="800">
+        Title="MainWindow" Height="485" Width="800">
     <Grid Background="#373840">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -84,6 +84,8 @@
                 </StackPanel>
 
                 <Slider Name="TimeBar" Grid.Row="2" Grid.Column="1" Width="325" Height="20" />
+                <Image Source="/images/volume.png" Margin="8,5,171,1" Stretch="Fill" Visibility="Visible" Grid.Column="2" Grid.Row="1" RenderTransformOrigin="1.024,0.296"/>
+                <Slider x:Name="VolumeSlider" Grid.Row="1" Grid.Column="2" Minimum="0" Maximum="1" Value="{Binding ElementName=mediaPlayer, Path=Volume}" Margin="34,5,30,15" Grid.RowSpan="2" />
             </Grid>
         </StackPanel>
 

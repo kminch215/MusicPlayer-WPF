@@ -32,8 +32,6 @@ namespace MusicPlayer
         private Stack<Song> songReplayStack;
         private MediaPlayer mediaPlayer;
         private Thread musicPlayingThread;
-        //private AddPlaylist addPlaylist;
-
 
         public MainWindow()
         {
@@ -42,10 +40,13 @@ namespace MusicPlayer
             songTimer.Elapsed += UpdateScrollBarPosition;
             SongList.SelectionChanged += SongSelection_Click;
             PreviewKeyDown += MainWindow_PreviewKeyDown;
+            VolumeSlider.ValueChanged += VolumeSlider_ValueChanged;
             songQueue = new Queue<Song>();
             songReplayStack = new Stack<Song>();
             mediaPlayer = new MediaPlayer();
-            musicPlayingThread = new Thread(playMusic);
+            mediaPlayer.IsMuted = false;
+            VolumeSlider.Value = 0.5;
+            musicPlayingThread = new Thread(PlayMusic);
             playlists = new List<Playlist>();
             playlists.Add(new Playlist("All Songs"));
             PlaylistList.Items.Add(playlists[0].PlaylistName);
@@ -58,7 +59,6 @@ namespace MusicPlayer
 
             // Subscribe to the PlaylistCreated event
             addPlaylist.PlaylistCreated += AddPlaylistWindow_PlaylistCreated;
-
             addPlaylist.ShowDialog();
         }
 
@@ -66,7 +66,6 @@ namespace MusicPlayer
         {
             // Handle the PlaylistCreated event and use the playlist name
             playlists.Add(new Playlist(playlistName));
-            //updatePlaylistList();
             PlaylistList.Items.Add(playlistName);
         }
 
@@ -90,20 +89,19 @@ namespace MusicPlayer
         private void AddSongToWindow(string songName, string artistName, string songFilePath)
         {
             Song newSong = new Song(songName, artistName, songFilePath);
-            Console.WriteLine("Playlist: " + PlaylistList.SelectedIndex);
 
             if (PlaylistList.SelectedIndex == -1 || PlaylistList.SelectedIndex == 0)
             {
                 playlists[0].addSong(newSong);
                 Console.WriteLine("New Song Added");
-                sortAndDisplaySongList(0);
+                SortAndDisplaySongList(0);
             }
             else
             {
                 playlists[0].addSong(newSong);
                 playlists[PlaylistList.SelectedIndex].addSong(newSong);
-                sortAndDisplaySongList(PlaylistList.SelectedIndex);
-                sortAndDisplaySongList(0);
+                SortAndDisplaySongList(PlaylistList.SelectedIndex);
+                SortAndDisplaySongList(0);
                 DisplayPlaylist(PlaylistList.SelectedIndex);
             }
         }
@@ -115,11 +113,10 @@ namespace MusicPlayer
 
         private void SongSelection_Click(object sender, RoutedEventArgs e)
         {
-            string songInformation = playlists[PlaylistList.SelectedIndex].SongPlaylist[SongList.SelectedIndex].ToString();
-            Console.WriteLine("Song selected: " + songInformation);
-
             try
             {
+                string songInformation = playlists[PlaylistList.SelectedIndex].SongPlaylist[SongList.SelectedIndex].ToString();
+
                 MusicControls.Visibility = Visibility.Visible;
                 SongInformationDisplay.Text = songInformation;
                 songQueue.Clear();
@@ -138,7 +135,7 @@ namespace MusicPlayer
                 }
                 else
                 {
-                    playMusic();
+                    PlayMusic();
                 }
             }
             catch (Exception ex)
@@ -161,7 +158,7 @@ namespace MusicPlayer
                 SongList.SelectionChanged -= RemoveSongSelection_Click;
                 SongList.SelectionChanged += SongSelection_Click;
                 DeleteSongLable.Visibility = Visibility.Hidden;
-                sortAndDisplaySongList(0);
+                SortAndDisplaySongList(0);
             }
             else
             {
@@ -177,13 +174,13 @@ namespace MusicPlayer
                 SongList.SelectionChanged -= RemoveSongSelection_Click;
                 SongList.SelectionChanged += SongSelection_Click;
                 DeleteSongLable.Visibility = Visibility.Hidden;
-                sortAndDisplaySongList(PlaylistList.SelectedIndex);
-                sortAndDisplaySongList(0);
+                SortAndDisplaySongList(PlaylistList.SelectedIndex);
+                SortAndDisplaySongList(0);
                 DisplayPlaylist(PlaylistList.SelectedIndex);
             }
         }
 
-            public void ClearSongList()
+        public void ClearSongList()
         {
             SongList.SelectionChanged -= SongSelection_Click;
             SongList.Items.Clear();
@@ -199,7 +196,7 @@ namespace MusicPlayer
             }
         }
 
-        public void updatePlaylistList()
+        public void UpdatePlaylistList()
         {
             //PlaylistList.Items.Clear();
             foreach(Playlist p in playlists)
@@ -208,7 +205,7 @@ namespace MusicPlayer
             }
         }
 
-        public void sortAndDisplaySongList(int playlistIndex)
+        public void SortAndDisplaySongList(int playlistIndex)
         {
             Console.WriteLine(playlists[playlistIndex].SongPlaylist.Count);
             if (playlistIndex >= 0 && playlistIndex < playlists.Count)
@@ -233,7 +230,6 @@ namespace MusicPlayer
 
                 // Clear the song list
                 ClearSongList();
-                Console.WriteLine("About to print the songs");
 
                 // Add sorted songs to the song list
                 foreach (Song song in playlists[playlistIndex].SongPlaylist)
@@ -245,18 +241,15 @@ namespace MusicPlayer
             }
         }
 
-        private void playMusic()
+        private void PlayMusic()
         {
             Dispatcher.Invoke(() =>
             {
                 string filePath = songQueue.First().FilePath;
-                Console.WriteLine("test");
                 string verbatimString = filePath;
-                Console.WriteLine(verbatimString);
                 mediaPlayer.Open(new Uri(verbatimString));
                 ExtractAlbumArt(verbatimString);
                 PlayPauseButton.Source = new BitmapImage(new Uri("/images/pause.png", UriKind.RelativeOrAbsolute));
-                Console.WriteLine("test");
                 mediaPlayer.Play();
                 songTimer.Enabled = true;
             });
@@ -264,6 +257,7 @@ namespace MusicPlayer
 
         private void ExtractAlbumArt(string filePath)
         {
+            SongsImage.Source = null;
             try
             {
                 using (var file = TagLib.File.Create(filePath))
@@ -300,8 +294,7 @@ namespace MusicPlayer
         private void UpdateScrollBarPosition(object source, ElapsedEventArgs e)
         {
             try
-            {
-
+            { 
                 Dispatcher.Invoke(() =>
                 {
                     // Get the current position and duration of the song
@@ -319,6 +312,15 @@ namespace MusicPlayer
             catch(Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Update the volume of the MediaPlayer based on the slider value
+            if (mediaPlayer != null)
+            {
+                mediaPlayer.Volume = VolumeSlider.Value;
             }
         }
 
@@ -352,7 +354,7 @@ namespace MusicPlayer
                 {
                     // If there are more songs, play the next one
                     SongInformationDisplay.Text = songQueue.First().Title + " - " + songQueue.First().Artist;
-                    playMusic();
+                    PlayMusic();
                 }
                 else
                 {
@@ -388,7 +390,7 @@ namespace MusicPlayer
 
                     // If there are more songs, play the next one
                     SongInformationDisplay.Text = songQueue.First().Title + " - " + songQueue.First().Artist;
-                    playMusic();
+                    PlayMusic();
                 }
                 else
                 {
