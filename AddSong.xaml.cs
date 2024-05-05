@@ -33,8 +33,6 @@ namespace MusicPlayer
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
 
-            //openFileDialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-
             try
             {
                 if (openFileDialog.ShowDialog() == true)
@@ -57,8 +55,6 @@ namespace MusicPlayer
             }
             catch (Exception ex)
             {
-                Console.WriteLine("catch in AddSong");
-
                 // Exception occurred while opening the file dialog
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
@@ -77,6 +73,7 @@ namespace MusicPlayer
             }
         }
 
+        //Handles closing the window if the cancel button is pressed
         private void CancelAddingSong(object sender, RoutedEventArgs e)
         {
             this.Close();

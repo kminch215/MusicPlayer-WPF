@@ -26,11 +26,13 @@ namespace MusicPlayer
             InitializeComponent();
         }
 
+        //Logic for Creating Playlist pop up window
         private void CreatePlaylist_Click(object sender, RoutedEventArgs e)
         {
+            //If the user does not enter a playlist name
             if(string.IsNullOrEmpty(NewPlaylistName.Text))
             {
-                Console.WriteLine("No playlist name");
+                MessageBox.Show("No playlist name");
             }
 
             string playlistName = NewPlaylistName.Text;
