@@ -14,8 +14,9 @@ To run the Music Player application, ensure you have the following prerequisites
 
 1. Clone this repository to your local machine using `git clone https://github.com/your_username/MusicPlayer.git`.
 2. Open the solution file (`MusicPlayer.sln`) in Visual Studio.
-3. Build the solution to restore NuGet packages and compile the project.
-4. Run the application by pressing `F5` or clicking on the "Start" button in Visual Studio.
+3. Make sure that `TagLib` is installed in the NuGet package manager
+4. Build the solution to restore NuGet packages and compile the project.
+5. Run the application by pressing `F5` or clicking on the "Start" button in Visual Studio.
 
 ## Features
 
