@@ -1,6 +1,7 @@
 # Music Player README
 
 This repository contains a C# WPF application for a Music Player. This Music Player allows users to manage playlists, add songs to those playlists, play, pause, skip, and rewind songs. Additionally, it provides features such as volume control and album art display.
+### Demo Video: https://youtu.be/Vny7BpMxN2s
 
 ## Getting Started
 
@@ -8,8 +9,6 @@ To run the Music Player application, ensure you have the following prerequisites
 
 - .NET Framework (version X.X or later)
 - Windows Operating System
-
-### Demo Video: https://youtu.be/Vny7BpMxN2s
 
 ## Installation
 
